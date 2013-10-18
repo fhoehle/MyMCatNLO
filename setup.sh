@@ -1,5 +1,9 @@
 #!/bin/bash
 # setting up neccessary libraries
+if [ "X$SCRAM_ARCH" -ne "Xslc5_amd64_gcc434" ]; then
+  echo "wrong architecture or none given: SCRAM_ARCH: $SCRAM_ARCH "
+  exit 1
+fi
 command -v scram > /dev/null 2>&1
 if [ $? -ne 0 ]; then
 echo "scarm doesn't exist, run cmsenv"

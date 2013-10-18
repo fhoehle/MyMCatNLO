@@ -134,7 +134,7 @@ diff -u MCatNLO_3_4_1_Base/MCatNLO.inputs MCatNLO_3_4_1_Base_new/MCatNLO.inputs
  EXEPREFIX=ttb
  # number of events; set it to 0 to skip the event generation step
 -NEVENTS=500000
-+NEVENTS=25000000
++NEVENTS=500
  # 0 for weights=+1/-1, 1 for weights whose sum is the total rate
  WGTTYPE=1
  # seed for random numbers in the generation of events. 0 is default

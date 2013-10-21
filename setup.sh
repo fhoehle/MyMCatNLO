@@ -1,6 +1,6 @@
 #!/bin/bash
 # setting up neccessary libraries
-if [ "X$SCRAM_ARCH" != "Xslc5_amd64_gcc434" ]; then
+if [ "X$SCRAM_ARCH" != "Xslc5_amd64_gcc434" -a  "X$SCRAM_ARCH" != "Xslc5_amd64_gcc462" ]; then
   echo "wrong architecture or none given: SCRAM_ARCH: $SCRAM_ARCH "
   return 1
 fi

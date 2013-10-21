@@ -1,6 +1,6 @@
-diff -u MCatNLO_3_4_1_Base/MCatNLO.Script MCatNLO_3_4_1_Base_new/MCatNLO.Script
---- MCatNLO_3_4_1_Base/MCatNLO.Script	2009-10-22 11:44:50.000000000 +0200
-+++ MCatNLO_3_4_1_Base_new/MCatNLO.Script	2013-10-17 19:36:48.413126191 +0200
+diff -u MCatNLO_3_4_1_Base_orig/MCatNLO.Script MCatNLO_3_4_1_Base/MCatNLO.Script
+--- MCatNLO_3_4_1_Base_orig/MCatNLO.Script	2013-10-21 10:12:42.000000000 +0200
++++ MCatNLO_3_4_1_Base/MCatNLO.Script	2013-10-18 19:57:02.000000000 +0200
 @@ -115,9 +115,9 @@
  EXTRAPOLATE|extrapolate) PDFGROUP=LHAEXT ;;
  *) echo "no such option; failure in linklhapdf" ; exit 1 ;;
@@ -69,9 +69,9 @@ diff -u MCatNLO_3_4_1_Base/MCatNLO.Script MCatNLO_3_4_1_Base_new/MCatNLO.Script
  compile MC
  whichherpdf $HERPDF
  if [ $pdftype = 1 ]
-diff -u MCatNLO_3_4_1_Base/MCatNLO.inputs MCatNLO_3_4_1_Base_new/MCatNLO.inputs
---- MCatNLO_3_4_1_Base/MCatNLO.inputs	2009-10-22 11:44:50.000000000 +0200
-+++ MCatNLO_3_4_1_Base_new/MCatNLO.inputs	2013-10-17 19:36:48.414126172 +0200
+diff -u MCatNLO_3_4_1_Base_orig/MCatNLO.inputs MCatNLO_3_4_1_Base/MCatNLO.inputs
+--- MCatNLO_3_4_1_Base_orig/MCatNLO.inputs	2013-10-21 10:12:42.000000000 +0200
++++ MCatNLO_3_4_1_Base/MCatNLO.inputs	2013-10-21 10:02:34.000000000 +0200
 @@ -45,24 +45,24 @@
  #
  #
@@ -147,7 +147,7 @@ diff -u MCatNLO_3_4_1_Base/MCatNLO.inputs MCatNLO_3_4_1_Base_new/MCatNLO.inputs
  # set HERPDF=DEFAULT to use HERWIG default PDFs, HERPDF=EXTPDF to use 
  # the same PDFs as used in the NLO; the setting of this parameter is 
  # independent of the setting of PDFLIBRARY
-@@ -233,12 +233,12 @@
+@@ -233,19 +233,19 @@
  HERWIGVER="herwig6510.o"
  # set the following variable equal to the name of the directory where
  # the PDF grid files are stored. Effective only if PDFLIBRARY=THISLIB
@@ -162,9 +162,17 @@ diff -u MCatNLO_3_4_1_Base/MCatNLO.inputs MCatNLO_3_4_1_Base_new/MCatNLO.inputs
  # set LHAOFL=FREEZE to freeze PDFs from LHAPDF at the boundaries,
  # =EXTRAPOLATE otherwise. This variable is related to LHAPARM(18)
  LHAOFL=FREEZE
-diff -u MCatNLO_3_4_1_Base/Makefile MCatNLO_3_4_1_Base_new/Makefile
---- MCatNLO_3_4_1_Base/Makefile	2009-10-22 11:44:50.000000000 +0200
-+++ MCatNLO_3_4_1_Base_new/Makefile	2013-10-17 19:36:48.435125783 +0200
+ # set the following variable equal to the names of the libraries which 
+ # need be linked. Library names are separated by white spaces. 
+ # Note: LHAPDF is a special case, and must not be included here
+-EXTRALIBS=
++EXTRALIBS="stdc++ z"
+ # set the following variable equal to the paths to the libraries which 
+ # need be linked. Library paths are separated by white spaces. 
+ # Note: LHAPDF is a special case, and must not be included here
+diff -u MCatNLO_3_4_1_Base_orig/Makefile MCatNLO_3_4_1_Base/Makefile
+--- MCatNLO_3_4_1_Base_orig/Makefile	2013-10-21 10:12:42.000000000 +0200
++++ MCatNLO_3_4_1_Base/Makefile	2013-10-18 19:57:03.000000000 +0200
 @@ -1,48 +1,11 @@
 -# Use this file as follows:
 -# gmake -f Makefile EXTRAOBJ=<alpha,linux>.o VPATH=<vpath> <EXENAME>
@@ -319,3 +327,4 @@ diff -u MCatNLO_3_4_1_Base/Makefile MCatNLO_3_4_1_Base_new/Makefile
 -
  MC_EXE_LHAPDF : $(HWFILES) $(HERWIGVER) $(LPDFFILES)  
  	$(FF) $^ $(LHALIB) $(EXTRAPATHS) $(EXTRALIBS) -o $@
+Common subdirectories: MCatNLO_3_4_1_Base_orig/Package341 and MCatNLO_3_4_1_Base/Package341

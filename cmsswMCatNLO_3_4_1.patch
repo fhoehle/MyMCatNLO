@@ -1,6 +1,6 @@
-diff -u MCatNLO_3_4_1_Base_orig/MCatNLO.Script MCatNLO_3_4_1_Base/MCatNLO.Script
---- MCatNLO_3_4_1_Base_orig/MCatNLO.Script	2013-10-21 10:12:42.000000000 +0200
-+++ MCatNLO_3_4_1_Base/MCatNLO.Script	2013-10-18 19:57:02.000000000 +0200
+diff -u MCatNLO_3_4_1_Base/MCatNLO.Script MCatNLO_3_4_1_Base_new/MCatNLO.Script
+--- MCatNLO_3_4_1_Base/MCatNLO.Script	2013-10-21 13:31:52.000000000 +0200
++++ MCatNLO_3_4_1_Base_new/MCatNLO.Script	2013-10-18 19:57:02.000000000 +0200
 @@ -115,9 +115,9 @@
  EXTRAPOLATE|extrapolate) PDFGROUP=LHAEXT ;;
  *) echo "no such option; failure in linklhapdf" ; exit 1 ;;
@@ -69,9 +69,9 @@ diff -u MCatNLO_3_4_1_Base_orig/MCatNLO.Script MCatNLO_3_4_1_Base/MCatNLO.Script
  compile MC
  whichherpdf $HERPDF
  if [ $pdftype = 1 ]
-diff -u MCatNLO_3_4_1_Base_orig/MCatNLO.inputs MCatNLO_3_4_1_Base/MCatNLO.inputs
---- MCatNLO_3_4_1_Base_orig/MCatNLO.inputs	2013-10-21 10:12:42.000000000 +0200
-+++ MCatNLO_3_4_1_Base/MCatNLO.inputs	2013-10-21 10:02:34.000000000 +0200
+diff -u MCatNLO_3_4_1_Base/MCatNLO.inputs MCatNLO_3_4_1_Base_new/MCatNLO.inputs
+--- MCatNLO_3_4_1_Base/MCatNLO.inputs	2013-10-21 13:31:52.000000000 +0200
++++ MCatNLO_3_4_1_Base_new/MCatNLO.inputs	2013-10-21 10:02:34.000000000 +0200
 @@ -45,24 +45,24 @@
  #
  #
@@ -170,9 +170,9 @@ diff -u MCatNLO_3_4_1_Base_orig/MCatNLO.inputs MCatNLO_3_4_1_Base/MCatNLO.inputs
  # set the following variable equal to the paths to the libraries which 
  # need be linked. Library paths are separated by white spaces. 
  # Note: LHAPDF is a special case, and must not be included here
-diff -u MCatNLO_3_4_1_Base_orig/Makefile MCatNLO_3_4_1_Base/Makefile
---- MCatNLO_3_4_1_Base_orig/Makefile	2013-10-21 10:12:42.000000000 +0200
-+++ MCatNLO_3_4_1_Base/Makefile	2013-10-18 19:57:03.000000000 +0200
+diff -u MCatNLO_3_4_1_Base/Makefile MCatNLO_3_4_1_Base_new/Makefile
+--- MCatNLO_3_4_1_Base/Makefile	2013-10-21 13:31:53.000000000 +0200
++++ MCatNLO_3_4_1_Base_new/Makefile	2013-10-18 19:57:03.000000000 +0200
 @@ -1,48 +1,11 @@
 -# Use this file as follows:
 -# gmake -f Makefile EXTRAOBJ=<alpha,linux>.o VPATH=<vpath> <EXENAME>
@@ -327,4 +327,29 @@ diff -u MCatNLO_3_4_1_Base_orig/Makefile MCatNLO_3_4_1_Base/Makefile
 -
  MC_EXE_LHAPDF : $(HWFILES) $(HERWIGVER) $(LPDFFILES)  
  	$(FF) $^ $(LHALIB) $(EXTRAPATHS) $(EXTRALIBS) -o $@
-Common subdirectories: MCatNLO_3_4_1_Base_orig/Package341 and MCatNLO_3_4_1_Base/Package341
+Only in MCatNLO_3_4_1_Base_new: Package341
+diff -u MCatNLO_3_4_1_Base/mcatnlo_qqmain.f MCatNLO_3_4_1_Base_new/mcatnlo_qqmain.f
+--- MCatNLO_3_4_1_Base/mcatnlo_qqmain.f	2009-10-22 11:44:51.000000000 +0200
++++ MCatNLO_3_4_1_Base_new/mcatnlo_qqmain.f	2013-10-21 13:31:26.000000000 +0200
+@@ -1280,8 +1280,8 @@
+            call fk88strcat(fname,'_a',fnamea)
+            call fk88strcat(fnamev,'_a.events',fname1)
+            open(unit=22,file=fname1,
+-     #          form='formatted',status='old')
+-           call toend(22)
++     #          form='formatted',access='append',status='old')
++C c           call toend(22)
+            call run_spring(sig5a,fnamea,mx_of_evta,maxtrials,
+      #                     nevts,ntrls,ndim,nwild,iseed)
+            close(22)
+@@ -1340,8 +1340,8 @@
+            call fk88strcat(fname,'_b',fnameb)
+            call fk88strcat(fnamev,'_b.events',fname1)
+            open(unit=22,file=fname1,
+-     #          form='formatted',status='old')
+-           call toend(22)
++     #          form='formatted',access='append',status='old')
++C C           call toend(22)
+            call run_spring(sig5b,fnameb,mx_of_evtb,maxtrials,
+      #                     nevts,ntrls,ndim,nwild,iseed)
+            close(22)

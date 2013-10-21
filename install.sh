@@ -11,7 +11,11 @@ mkdir $tarBallDir
   tar -xzf $tarBallDir/Package341.tar.gz
   mv Package341/* ./
   rm -rf Package341 
-  patch < $mainDir/cmsswMCatNLO_3_4_1.patch
+  if [ "X$SCRAM_ARCH" == "Xslc5_amd64_gcc462" -o "X$SCRAM_ARCH" == "Xslc6_amd64_gcc462" ]; then 
+    patch < $mainDir/cmsswMCatNLO_3_4_1_gcc462.patch
+  else
+    patch < $mainDir/cmsswMCatNLO_3_4_1.patch
+  fi
   chmod u+x MCatNLO.inputs
   chmod -R a-w $installDir
 else if [ "X$1" == "Xclean" ]; then

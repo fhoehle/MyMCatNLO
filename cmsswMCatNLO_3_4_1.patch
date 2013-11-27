@@ -1,0 +1,355 @@
+diff -u MCatNLO_3_4_1_Base/MCatNLO.Script MCatNLO_3_4_1_Base_new/MCatNLO.Script
+--- MCatNLO_3_4_1_Base/MCatNLO.Script	2013-10-21 13:31:52.000000000 +0200
++++ MCatNLO_3_4_1_Base_new/MCatNLO.Script	2013-10-18 19:57:02.000000000 +0200
+@@ -115,9 +115,9 @@
+ EXTRAPOLATE|extrapolate) PDFGROUP=LHAEXT ;;
+ *) echo "no such option; failure in linklhapdf" ; exit 1 ;;
+ esac
+-if [ -d "$LHAPATH" ]
++if [ -d "$LHABASEPATH" ]
+ then
+-  ln -sf $LHAPATH/bin/lhapdf-config $thisdir/$ARCHNAME/lhapdf-config
++  ln -sf $LHABASEPATH/bin/lhapdf-config $thisdir/$ARCHNAME/lhapdf-config
+ else
+   echo "Cannot find LHAPDF directory"
+   exit 1
+@@ -159,27 +159,31 @@
+ case $1 in
+ NLO) if [ $UsedPdfLib = "PDFLIB" ]
+      then
+-       EXEC_NAMEF="NLO_EXE_PDFLIB"
++	echo "ERROR: only LHAPDF supported."
++	exit
+      elif [ $UsedPdfLib = "THISLIB" ]
+      then
+-       EXEC_NAMEF="NLO_EXE_THISLIB"
++	echo "ERROR: only LHAPDF supported."
++	exit
+      elif [ $UsedPdfLib = "LHAPDF" ]
+      then
+        EXEC_NAMEF="NLO_EXE_LHAPDF"
+-       LIBSLHA="$LIBSLHA""$LHAPATH""/lib/libLHAPDF.a"
++       LIBSLHA="$LIBSLHA""-L $LHABASEPATH/lib -lLHAPDF"
+      else
+        echo "no such option"; exit 1
+      fi ;;
+ MC) if [ $UsedPdfLib = "PDFLIB" ]
+      then
+-       EXEC_NAMEF="MC_EXE_PDFLIB"
++	echo "ERROR: only LHAPDF supported."
++	exit
+      elif [ $UsedPdfLib = "THISLIB" ]
+      then
+-       EXEC_NAMEF="MC_EXE_THISLIB"
++	echo "ERROR: only LHAPDF supported."
++	exit
+      elif [ $UsedPdfLib = "LHAPDF" ]
+      then
+        EXEC_NAMEF="MC_EXE_LHAPDF"
+-       LIBSLHA="$LIBSLHA""$LHAPATH""/lib/libLHAPDF.a"
++       LIBSLHA="$LIBSLHA""-L $LHABASEPATH/lib -lLHAPDF"
+      else
+        echo "fatal error in compile"; exit 1
+      fi ;;
+@@ -219,7 +223,7 @@
+ (cd $thisdir/$ARCHNAME/$TMPDIRNAME ;\
+  $EXMAKE -f $thisdir/Makefile $EXTRA "$HWUTIMAKE" "$HERWGMAKE" \
+  "$LIBSLHA" "$LIBSMAKE" "$LIBSMAKEP" "$INCLMAKE" \
+- VPATH=$thisdir/$ARCHNAME/:$thisdir/:$HWPATH:$LHAPATH/lib/ $EXEC_NAME ;\
++ VPATH=$thisdir/$ARCHNAME/:$thisdir/:$HWPATH:$LHABASEPATH/lib/ $EXEC_NAME ;\
+  if [ "$EXEC_NAME" != "$EXEC_NAMEFF" ] 
+  then
+    \mv $EXEC_NAME $EXEC_NAMEFF
+@@ -642,6 +646,8 @@
+ 
+ # wrapper for the functions which run and compile MC codes
+ function runMC {
++echo "runMC not suported in this MC@NLO installation for CMSSW"
++exit
+ compile MC
+ whichherpdf $HERPDF
+ if [ $pdftype = 1 ]
+diff -u MCatNLO_3_4_1_Base/MCatNLO.inputs MCatNLO_3_4_1_Base_new/MCatNLO.inputs
+--- MCatNLO_3_4_1_Base/MCatNLO.inputs	2013-10-21 13:31:52.000000000 +0200
++++ MCatNLO_3_4_1_Base_new/MCatNLO.inputs	2013-10-21 10:02:34.000000000 +0200
+@@ -45,24 +45,24 @@
+ #
+ #
+ # CM energy 
+-ECM=14000
++ECM=8000
+ # renormalization scale factor 
+ FREN=1
+ # factorization scale factor 
+ FFACT=1
+ # mass of the heavy quark (bottom for IPROC=-1705, top otherwise, including
+ # Higgs production)
+-HVQMASS=170.9
++HVQMASS=172.5
+ # width of the top. A negative entry will force the code to compute the width
+ # at the LO in the SM, in ttbar and single top production and when the
+ # tops decay
+-TWIDTH=1.4
++TWIDTH=1.31
+ # W mass 
+-WMASS=80.42
++WMASS=80.398
+ # W width. A negative entry will force the code to compute the width
+ # at the LO in the SM, in single top production (Wt channel) when the
+ # top and W decay, and in WW production when the W's decay
+-WWIDTH=2.124
++WWIDTH=2.141
+ # Z mass
+ ZMASS=91.17
+ # Z width
+@@ -128,7 +128,7 @@
+ DMASS=0.32
+ SMASS=0.5
+ CMASS=1.55
+-BMASS=4.95
++BMASS=4.16
+ GMASS=0.75
+ # absolute values of the CKM matrix elements; used for single-top production
+ # and subsequent top decay, and for top decay in ttbar production. 
+@@ -146,7 +146,7 @@
+ AEMRUN=YES
+ # process number; MC@NLO process codes are negative. A positive process
+ # code may be used (executing runMC) to run standard HERWIG
+-IPROC=-11706
++IPROC=-1706
+ # vector boson code: IVCODE=-1,0,1 for W^-, Z, and W^+ respectively.
+ # This variables is only used in WH and ZH production
+ IVCODE=1
+@@ -181,7 +181,7 @@
+ # PDF group name; unused when linked to LHAPDF
+ PDFGROUP=MRS
+ # PDF set number; use LHAGLUE conventions when linked to LHAPDF
+-PDFSET=110
++PDFSET=10050
+ # Lambda_5, used in NLO computations. A negative entry returns the value
+ # resulting from PDF fit. 
+ # WARNING: negative entries may lead to inconsistent results when using 
+@@ -204,7 +204,7 @@
+ # prefix for the NLO and MC executables
+ EXEPREFIX=ttb
+ # number of events; set it to 0 to skip the event generation step
+-NEVENTS=500000
++NEVENTS=500
+ # 0 for weights=+1/-1, 1 for weights whose sum is the total rate
+ WGTTYPE=1
+ # seed for random numbers in the generation of events. 0 is default
+@@ -213,7 +213,7 @@
+ BASES=ON
+ # set PDFLIBRARY=THISLIB, =PDFLIB, or =LHAPDF to obtain PDFs from our 
+ # private PDF library, from PDFLIB or from LHAPDF respectively
+-PDFLIBRARY=THISLIB
++PDFLIBRARY=LHAPDF
+ # set HERPDF=DEFAULT to use HERWIG default PDFs, HERPDF=EXTPDF to use 
+ # the same PDFs as used in the NLO; the setting of this parameter is 
+ # independent of the setting of PDFLIBRARY
+@@ -233,19 +233,19 @@
+ HERWIGVER="herwig6510.o"
+ # set the following variable equal to the name of the directory where
+ # the PDF grid files are stored. Effective only if PDFLIBRARY=THISLIB
+-PDFPATH="/home/frixione/PDFgrids/"
++PDFPATH=`scramv1 tool info lhapdf | grep LIBDIR | sed 's/=/\n/g' | tail -1`
+ # set the following variable equal to the name of the directory where
+ # the local version of LHAPDF is installed. We assume that the library,
+ # PDF sets, and configuration script are located in lib/, 
+ # share/lhapdf/PDFsets/, and bin/ respectively
+-LHAPATH="/home/frixione/lhapdf-5.3.1/lhapdf/"
++LHABASEPATH=`scramv1 tool info lhapdf | grep LHAPDF_BASE | sed 's/=/\n/g' | tail -1`
+ # set LHAOFL=FREEZE to freeze PDFs from LHAPDF at the boundaries,
+ # =EXTRAPOLATE otherwise. This variable is related to LHAPARM(18)
+ LHAOFL=FREEZE
+ # set the following variable equal to the names of the libraries which 
+ # need be linked. Library names are separated by white spaces. 
+ # Note: LHAPDF is a special case, and must not be included here
+-EXTRALIBS=
++EXTRALIBS="stdc++ z"
+ # set the following variable equal to the paths to the libraries which 
+ # need be linked. Library paths are separated by white spaces. 
+ # Note: LHAPDF is a special case, and must not be included here
+diff -u MCatNLO_3_4_1_Base/Makefile MCatNLO_3_4_1_Base_new/Makefile
+--- MCatNLO_3_4_1_Base/Makefile	2013-10-21 13:31:53.000000000 +0200
++++ MCatNLO_3_4_1_Base_new/Makefile	2013-10-18 19:57:03.000000000 +0200
+@@ -1,48 +1,11 @@
+-# Use this file as follows:
+-# gmake -f Makefile EXTRAOBJ=<alpha,linux>.o VPATH=<vpath> <EXENAME>
+-# See below for a list of name of executables. This is usually unnecessary,
+-# the relevant operations being done by the scripts. If done manually, the
+-# proper <vpath> must be entered at runtime
+-
+-ifeq ($(shell uname),AIX)
+-F77=xlf -qextname -qflttrap=overflow:zerodivide:invalid:enable -O3 -qstrict \
+-#       -qautodbl=dblpad
+-SYSOBJ=
+-AUTODBL=-qautodbl=dblpad
+-endif
+-ifeq ($(shell uname),SunOS)
+-F77= f77 -fnonstd
+-SYSOBJ=
+-endif
+-ifeq ($(shell uname),Linux)
+-F77= g77 -Wall -fno-automatic
++#F77= g77 -Wall -fno-automatic
++F77= gfortran -w -fno-automatic
+ CPP= g++ $(INCLOPTION)
+ SYSOBJ=trapfpe.o
+-endif
+-ifeq ($(shell uname),HP-UX)
+-F77= g77 -Wall
+-SYSOBJ=
+-endif
+-ifeq ($(shell uname),OSF1)
+-F77= f77 
+-CPP= g++ $(INCLOPTION)
+-SYSOBJ=
+-endif
+-ifeq ($(shell uname),Darwin)
+-F77= g77 -Wall -fno-automatic
+-CPP= g++ $(INCLOPTION)
+-endif
+ 
+ DEBUG=
+ FF=$(F77) $(DEBUG)
+ 
+-LIBS=`cernlib pdflib804 mathlib`
+-#$LIBS gets replaced at compilation time by
+-# /cern/pro/lib/libpdflib804.a /cern/pro/lib/libmathlib.a 
+-# /cern/pro/lib/libpacklib.a -L/usr/local/lib -lshift -lnsl -lcrypt -ldl
+-#on machines with a CERN installation. With a non-CERN installation,
+-#replace the definition above with 
+-#LIBS=/your/path/to/pdflib/libpdflib804.a .....
+ 
+ %.o: %.f
+ 	$(F77) $(DEBUG) $(AUTODBL) -c $<
+@@ -62,102 +25,39 @@
+ STFILES=mcatnlo_stmain.o mcatnlo_stxsec.o mcatnlo_helas2.o
+ WTDRFILES=mcatnlo_wtmain_dr.o mcatnlo_wtxsec_dr.o mcatnlo_helas2.o
+ WTDSFILES=mcatnlo_wtmain_ds.o mcatnlo_wtxsec_ds.o mcatnlo_helas2.o
+-UTIFILES=mcatnlo_date.o mcatnlo_int.o mcatnlo_uxdate.o mcatnlo_uti.o \
+-         mcatnlo_str.o $(EXTRAOBJ)
+ LUTIFILES=mcatnlo_date.o mcatnlo_int.o mcatnlo_uxdate.o mcatnlo_uti.o \
+          mcatnlo_str.o $(EXTRAOBJ)
+-PDFFILES=mcatnlo_pdftomlm.o mcatnlo_libofpdf.o dummies.o 
+-CPDFFILES=mcatnlo_mlmtopdf.o dummies.o 
+ LPDFFILES=mcatnlo_mlmtolha.o dummies.o 
+ HWFILES=mcatnlo_hwdriver.o mcatnlo_hwlhin.o \
+         mcatnlo_str.o $(HWUTI)
+ 
+-QQNLO_EXE_THISLIB : $(QQFILES) $(UTIFILES) $(PDFFILES) $(SYSOBJ)
+-	$(FF) $^ $(EXTRAPATHS) $(EXTRALIBS) -o $@
+-
+-QQNLO_EXE_PDFLIB : $(QQFILES) $(UTIFILES) $(CPDFFILES) $(SYSOBJ)
+-	$(FF) $^ $(LIBS) $(EXTRAPATHS) $(EXTRALIBS) -o $@
+ 
+ QQNLO_EXE_LHAPDF : $(QQFILES) $(LUTIFILES) $(LPDFFILES) $(SYSOBJ)
+ 	$(FF) $^ $(LHALIB) $(EXTRAPATHS) $(EXTRALIBS) -o $@
+ 
+-VVNLO_EXE_THISLIB : $(VBFILES) $(UTIFILES) $(PDFFILES) $(SYSOBJ)
+-	$(FF) $^ $(EXTRAPATHS) $(EXTRALIBS) -o $@
+-
+-VVNLO_EXE_PDFLIB : $(VBFILES) $(UTIFILES) $(CPDFFILES) $(SYSOBJ)
+-	$(FF) $^ $(LIBS) $(EXTRAPATHS) $(EXTRALIBS) -o $@
+-
+ VVNLO_EXE_LHAPDF : $(VBFILES) $(LUTIFILES) $(LPDFFILES) $(SYSOBJ)
+ 	$(FF) $^ $(LHALIB) $(EXTRAPATHS) $(EXTRALIBS) -o $@
+ 
+-HGNLO_EXE_THISLIB : $(HGFILES) $(UTIFILES) $(PDFFILES) $(SYSOBJ)
+-	$(FF) $^ $(EXTRAPATHS) $(EXTRALIBS) -o $@
+-
+-HGNLO_EXE_PDFLIB : $(HGFILES) $(UTIFILES) $(CPDFFILES) $(SYSOBJ)
+-	$(FF) $^ $(LIBS) $(EXTRAPATHS) $(EXTRALIBS) -o $@
+-
+ HGNLO_EXE_LHAPDF : $(HGFILES) $(LUTIFILES) $(LPDFFILES) $(SYSOBJ)
+ 	$(FF) $^ $(LHALIB) $(EXTRAPATHS) $(EXTRALIBS) -o $@
+ 
+-SBNLO_EXE_THISLIB : $(SBFILES) $(UTIFILES) $(PDFFILES) $(SYSOBJ)
+-	$(FF) $^ $(EXTRAPATHS) $(EXTRALIBS) -o $@
+-
+-SBNLO_EXE_PDFLIB : $(SBFILES) $(UTIFILES) $(CPDFFILES) $(SYSOBJ)
+-	$(FF) $^ $(LIBS) $(EXTRAPATHS) $(EXTRALIBS) -o $@
+-
+ SBNLO_EXE_LHAPDF : $(SBFILES) $(LUTIFILES) $(LPDFFILES) $(SYSOBJ)
+ 	$(FF) $^ $(LHALIB) $(EXTRAPATHS) $(EXTRALIBS) -o $@
+ 
+-LLNLO_EXE_THISLIB : $(LLFILES) $(UTIFILES) $(PDFFILES) $(SYSOBJ)
+-	$(FF) $^ $(EXTRAPATHS) $(EXTRALIBS) -o $@
+-
+-LLNLO_EXE_PDFLIB : $(LLFILES) $(UTIFILES) $(CPDFFILES) $(SYSOBJ)
+-	$(FF) $^ $(LIBS) $(EXTRAPATHS) $(EXTRALIBS) -o $@
+-
+ LLNLO_EXE_LHAPDF : $(LLFILES) $(LUTIFILES) $(LPDFFILES) $(SYSOBJ)
+ 	$(FF) $^ $(LHALIB) $(EXTRAPATHS) $(EXTRALIBS) -o $@
+ 
+-VHNLO_EXE_THISLIB : $(VHFILES) $(UTIFILES) $(PDFFILES) $(SYSOBJ)
+-	$(FF) $^ $(EXTRAPATHS) $(EXTRALIBS) -o $@
+-
+-VHNLO_EXE_PDFLIB : $(VHFILES) $(UTIFILES) $(CPDFFILES) $(SYSOBJ)
+-	$(FF) $^ $(LIBS) $(EXTRAPATHS) $(EXTRALIBS) -o $@
+-
+ VHNLO_EXE_LHAPDF : $(VHFILES) $(LUTIFILES) $(LPDFFILES) $(SYSOBJ)
+ 	$(FF) $^ $(LHALIB) $(EXTRAPATHS) $(EXTRALIBS) -o $@
+ 
+-STNLO_EXE_THISLIB : $(STFILES) $(UTIFILES) $(PDFFILES) $(SYSOBJ)
+-	$(FF) $^ $(EXTRAPATHS) $(EXTRALIBS) -o $@
+-
+-STNLO_EXE_PDFLIB : $(STFILES) $(UTIFILES) $(CPDFFILES) $(SYSOBJ)
+-	$(FF) $^ $(LIBS) $(EXTRAPATHS) $(EXTRALIBS) -o $@
+-
+ STNLO_EXE_LHAPDF : $(STFILES) $(LUTIFILES) $(LPDFFILES) $(SYSOBJ)
+ 	$(FF) $^ $(LHALIB) $(EXTRAPATHS) $(EXTRALIBS) -o $@
+ 
+-WTDRNLO_EXE_THISLIB : $(WTDRFILES) $(UTIFILES) $(PDFFILES) $(SYSOBJ)
+-	$(FF) $^ $(EXTRAPATHS) $(EXTRALIBS) -o $@
+-
+-WTDRNLO_EXE_PDFLIB : $(WTDRFILES) $(UTIFILES) $(CPDFFILES) $(SYSOBJ)
+-	$(FF) $^ $(LIBS) $(EXTRAPATHS) $(EXTRALIBS) -o $@
+-
+ WTDRNLO_EXE_LHAPDF : $(WTDRFILES) $(LUTIFILES) $(LPDFFILES) $(SYSOBJ)
+ 	$(FF) $^ $(LHALIB) $(EXTRAPATHS) $(EXTRALIBS) -o $@
+ 
+-WTDSNLO_EXE_THISLIB : $(WTDSFILES) $(UTIFILES) $(PDFFILES) $(SYSOBJ)
+-	$(FF) $^ $(EXTRAPATHS) $(EXTRALIBS) -o $@
+-
+-WTDSNLO_EXE_PDFLIB : $(WTDSFILES) $(UTIFILES) $(CPDFFILES) $(SYSOBJ)
+-	$(FF) $^ $(LIBS) $(EXTRAPATHS) $(EXTRALIBS) -o $@
+-
+ WTDSNLO_EXE_LHAPDF : $(WTDSFILES) $(LUTIFILES) $(LPDFFILES) $(SYSOBJ)
+ 	$(FF) $^ $(LHALIB) $(EXTRAPATHS) $(EXTRALIBS) -o $@
+ 
+-MC_EXE_THISLIB : $(HWFILES) $(HERWIGVER) $(PDFFILES)
+-	$(FF) $^ $(EXTRAPATHS) $(EXTRALIBS) -o $@
+-
+-MC_EXE_PDFLIB : $(HWFILES) $(HERWIGVER) $(CPDFFILES) 
+-	$(FF) $^ $(LIBS) $(EXTRAPATHS) $(EXTRALIBS) -o $@
+-
+ MC_EXE_LHAPDF : $(HWFILES) $(HERWIGVER) $(LPDFFILES)  
+ 	$(FF) $^ $(LHALIB) $(EXTRAPATHS) $(EXTRALIBS) -o $@
+Only in MCatNLO_3_4_1_Base_new: Package341
+diff -u MCatNLO_3_4_1_Base/mcatnlo_qqmain.f MCatNLO_3_4_1_Base_new/mcatnlo_qqmain.f
+--- MCatNLO_3_4_1_Base/mcatnlo_qqmain.f	2009-10-22 11:44:51.000000000 +0200
++++ MCatNLO_3_4_1_Base_new/mcatnlo_qqmain.f	2013-10-21 13:31:26.000000000 +0200
+@@ -1280,8 +1280,8 @@
+            call fk88strcat(fname,'_a',fnamea)
+            call fk88strcat(fnamev,'_a.events',fname1)
+            open(unit=22,file=fname1,
+-     #          form='formatted',status='old')
+-           call toend(22)
++     #          form='formatted',access='append',status='old')
++C c           call toend(22)
+            call run_spring(sig5a,fnamea,mx_of_evta,maxtrials,
+      #                     nevts,ntrls,ndim,nwild,iseed)
+            close(22)
+@@ -1340,8 +1340,8 @@
+            call fk88strcat(fname,'_b',fnameb)
+            call fk88strcat(fnamev,'_b.events',fname1)
+            open(unit=22,file=fname1,
+-     #          form='formatted',status='old')
+-           call toend(22)
++     #          form='formatted',access='append',status='old')
++C C           call toend(22)
+            call run_spring(sig5b,fnameb,mx_of_evtb,maxtrials,
+      #                     nevts,ntrls,ndim,nwild,iseed)
+            close(22)
